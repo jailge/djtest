@@ -1,0 +1,526 @@
+{% extends 'base.html' %}
+
+{% block title %}定时计划{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/plugins/bootstrap3-editable/css/bootstrap-editable.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-table/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/static/plugins/GridManager/css/gm.css">
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <h1>
+        定时计划
+        <small>Crontab Schedule</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="{% url 'test1:index' %}"><i class="fa fa-dashboard"></i>主页 </a> </li>
+        <li class="active">定时计划</li>
+    </ol>
+</section>
+
+
+    <div class="panel-body" style="padding-bottom:0px;">
+{#        <div class="panel panel-default">#}
+{#            <div class="panel-heading">查询条件</div>#}
+{#            <div class="panel-body">#}
+{#                <form id="formSearch" class="form-horizontal">#}
+{#                    <div class="form-group" style="margin-top:15px">#}
+{#                        <label class="control-label col-sm-1" for="txt_search_departmentname">名称</label>#}
+{#                        <div class="col-sm-3">#}
+{#                            <input type="text" class="form-control" id="txt_search_departmentname">#}
+{#                        </div>#}
+{#                        <label class="control-label col-sm-1" for="txt_search_statu">状态</label>#}
+{#                        <div class="col-sm-3">#}
+{#                            <input type="text" class="form-control" id="txt_search_statu">#}
+{#                        </div>#}
+{#                        <div class="col-sm-4" style="text-align:left;">#}
+{#                            <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary">查询</button>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+
+        <div id="toolbar" class="btn-group">
+            <button id="btn_add" type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal_add">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>新增
+            </button>
+{#            <button id="btn_edit" type="button" class="btn btn-default">#}
+{#                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改#}
+{#            </button>#}
+            <button id="btn_delete" type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal_del">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
+            </button>
+
+            <!-- add模态框 -->
+            <div class="modal fade" id="myModal_add" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">新增间隔时间</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+
+                                <div class="form-group">
+                            <label for="task" class="col-sm-2 control-label">时</label>
+                            <div class="col-sm-3">
+
+                            <input class="form-control onlyNum" type="text" id="hour" name="hour" value="">
+                            </div>
+                            </div>
+                                <div class="form-group">
+                            <label for="task" class="col-sm-2 control-label">分</label>
+                            <div class="col-sm-3">
+
+                            <input class="form-control onlyNum" type="text" id="minute" name="minute" value="">
+                            </div>
+                            </div>
+                                <div class="form-group">
+                            <label for="task" class="col-sm-2 control-label">天</label>
+                            <div class="col-sm-3">
+
+                            <input class="form-control onlyNum" type="text" id="day_of_week" name="day_of_week" value="">
+                            </div>
+                            </div>
+                                <div class="form-group">
+                            <label for="task" class="col-sm-2 control-label">月</label>
+                            <div class="col-sm-3">
+
+                            <input class="form-control onlyNum" type="text" id="day_of_month" name="day_of_month" value="">
+                            </div>
+                            </div>
+                                <div class="form-group">
+                            <label for="task" class="col-sm-2 control-label">年</label>
+                            <div class="col-sm-3">
+
+                            <input class="form-control onlyNum" type="text" id="month_of_year" name="month_of_year" value="">
+                            </div>
+                            </div>
+
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <label id="result_label"></label>
+                            <button type="button" id="save_crontab" class="btn btn-primary">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>  <!-- add 模态框 -->
+            <!-- delete模态框 -->
+            <div class="modal fade" id="myModal_del" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">结果</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label id="result_label_del"></label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>  <!-- delete模态框 -->
+        </div>
+
+        <table id="tb_crontab_list"></table>
+    </div>
+
+
+
+
+
+{#    <table grid-manager="test"></table>#}
+
+{% endblock %}
+
+
+{% block script %}
+    <script src="/static/js/csrf.js"></script>
+    <script src='/static/js/jquery-3.3.1.min.js'></script>
+<script src="/static/js/jquery-1.10.2.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/plugins/GridManager/js/gm.js"></script>
+<script src="/static/plugins/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script src="/static/plugins/bootstrap-table/bootstrap-table.js"></script>
+<script src="/static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+<script src="/static/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+
+    <script>
+
+{#    $('table[grid-manager="test"]').GM({#}
+{#        supportRemind: true#}
+{#        ,i18n:'zh-cn'#}
+{#        ,textConfig:{#}
+{#            'page-go': {#}
+{#                'zh-cn':'跳转',#}
+{#                'en-us':'Go '#}
+{#            }#}
+{#        }#}
+{#        ,disableCache:false#}
+{#        ,disableOrder:false#}
+{#        ,supportSorting: true#}
+{#        ,isCombSorting: true#}
+{#        ,sortDownText: 'up'#}
+{#        ,sortUpText: 'down'#}
+{#        ,supportDrag:true#}
+{#        ,supportAjaxPage:true#}
+{#        ,ajax_url: "{% url 'test1:get_interval_list' %}"#}
+{#        ,ajax_type: 'GET'#}
+{#        ,pageSize:30#}
+{##}
+{#         ,columnData: [{#}
+{#                key: 'id',#}
+{#                remind: 'id',#}
+{#                sorting: 'up',#}
+{#                width: '200px',#}
+{#                text: 'id'#}
+{#            },{#}
+{#                key: 'period',#}
+{#                remind: 'period',#}
+{#                width: '200px',#}
+{#                text: 'period'#}
+{#            },#}
+{#        ]#}
+{#    });#}
+
+
+    $(function () {
+
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+
+    //2.初始化Button的点击事件
+    var oButtonInit = new ButtonInit();
+    oButtonInit.Init();
+
+});
+
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_crontab_list').bootstrapTable({
+            url: "{% url 'test1:get_crontab_list_sep' %}",         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            strictSearch: true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+            height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            queryParams: function (params) {//自定义参数，这里的参数是传给后台的，我这是是分页用的
+                return {//这里的params是table提供的
+                    cp: params.offset,//从数据库第几条记录开始
+                    ps: params.limit//找多少条
+                };
+            },
+            columns: [{
+                checkbox: true
+            }, {
+                field: 'id',
+                title: '编号'
+            }, {
+                field: 'hour',
+                title: '时',
+                editable: {
+                    type: 'text',
+                    title: '数值',
+                    validate: function (v) {
+                        if (!v) return '不能为空';
+
+                    }}
+            }, {
+                field: 'minute',
+                title: '分',
+                editable: {
+                    type: 'text',
+                    title: '数值',
+                    validate: function (v) {
+                        if (!v) return '不能为空';
+
+                    }}
+            },{
+                field: 'day_of_week',
+                title: '天',
+                editable: {
+                    type: 'text',
+                    title: '数值',
+                    validate: function (v) {
+                        if (!v) return '不能为空';
+
+                    }}
+            },{
+                field: 'day_of_month',
+                title: '周',
+                editable: {
+                    type: 'text',
+                    title: '数值',
+                    validate: function (v) {
+                        if (!v) return '不能为空';
+
+                    }}
+            },{
+                field: 'month_of_year',
+                title: '月',
+                editable: {
+                    type: 'text',
+                    title: '数值',
+                    validate: function (v) {
+                        if (!v) return '不能为空';
+
+                    }}
+            } ],
+            onEditableSave:function (field, row, oldValue, $el) {
+                $.ajax({
+                   type: "post",
+                    url:"{% url 'test1:update_crontab' %}",
+                    data: row,
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if(data.status == 'true'){
+                            alert('更新成功');
+                        }
+                    },
+                    error:function () {
+                        alert('更新失败');
+                    }
+                });
+            }
+        });
+    };
+
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            departmentname: $("#txt_search_departmentname").val(),
+            statu: $("#txt_search_statu").val()
+        };
+        return temp;
+    };
+    return oTableInit;
+};
+
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+
+    oInit.Init = function () {
+        //初始化页面上面的按钮事件
+    };
+
+    return oInit;
+};
+
+$(function () {
+   $.ajaxSetup({
+       headers:{"X-CSRFToken":getCookie("csrftoken")}
+   });
+});
+
+function getCookie(name) {
+    var arr,reg=new RegExp("(^|)"+name+"=([^;]*)(;|$)");
+    if(arr=document.cookie.match(reg)){
+        return unescape(arr[2]);
+    }else{
+        return null;
+    }
+}
+
+
+
+
+
+{#$(function () {#}
+{#        $("#tb_user").bootstrapTable({#}
+{#            toolbar: "#toolbar",#}
+{#            idField: "id",#}
+{#            pagination: true,#}
+{#            showRefresh: true,#}
+{#            search: true,#}
+{#            clickToSelect: true,#}
+{#            queryParams: function (param) {#}
+{#                return {};#}
+{#            },#}
+{#            url: "{% url 'test1:get_interval_list' %}",#}
+{#            #}
+{#            columns: [{#}
+{#                checkbox: true#}
+{#            }, {#}
+{#                field: "period",#}
+{#                title: "period",#}
+{#                editable: {#}
+{#                    type: 'text',#}
+{#                    title: '用户名',#}
+{#                    validate: function (v) {#}
+{#                        if (!v) return '用户名不能为空';#}
+{##}
+{#                    }#}
+{#                }#}
+{#            }, {#}
+{#                field: "id",#}
+{#                title: "id",#}
+{#            }#}
+{#            ],#}
+{#            onEditableSave: function (field, row, oldValue, $el) {#}
+{#                $.ajax({#}
+{#                    type: "post",#}
+{#                    url: "/Editable/Edit",#}
+{#                    data: row,#}
+{#                    dataType: 'JSON',#}
+{#                    success: function (data, status) {#}
+{#                        if (status == "success") {#}
+{#                            alert('提交数据成功');#}
+{#                        }#}
+{#                    },#}
+{#                    error: function () {#}
+{#                        alert('编辑失败');#}
+{#                    },#}
+{#                    complete: function () {#}
+{##}
+{#                    }#}
+{##}
+{#                });#}
+{#            }#}
+{#        });#}
+{#    });#}
+
+
+
+
+
+    </script>
+
+<script>
+$(document).ready(function () {
+    $(".onlyNum").onlyNum();
+});
+
+function get_para() {
+        var hour = $("#hour").val();
+        var minute = $("#minute").val();
+        var day_of_week = $("#day_of_week").val();
+        var day_of_month = $("#day_of_month").val();
+        var month_of_year = $("#month_of_year").val();
+        var para_data = {
+            'hour': hour,
+            'minute': minute,
+            'day_of_week':day_of_week,
+            'day_of_month':day_of_month,
+            'month_of_year':month_of_year
+        };
+        return para_data;
+    }
+
+    $("#save_crontab").click(function () {
+        var post_data = get_para();
+        $.post("{% url 'test1:add_crontab' %}", post_data, function(data){
+{#            alert(data['status']);#}
+            $("#result_label").html(data['status']);
+            if(data['status'] == 'true'){
+                $("#result_label").html("保存成功");
+                $("#tb_crontab_list").bootstrapTable('refresh');
+            }else{
+                $("#result_label").html("保存失败");
+            }
+        });
+    });
+
+
+$("input[name='every']").keyup(function () {
+        $(this).val($(this).val().replace(/D|^0/g,''));
+
+    }).bind("paste",function () {
+        $(this).val($(this).val().replace(/D|^0/g,''));
+    }).css("ime-mode","disabled");
+
+    // ----------------------------------------------------------------------
+// <summary>
+// 限制只能输入数字
+// </summary>
+// ----------------------------------------------------------------------
+$.fn.onlyNum = function () {
+    $(this).keypress(function (event) {
+        var eventObj = event || e;
+        var keyCode = eventObj.keyCode || eventObj.which;
+        if ((keyCode >= 48 && keyCode <= 57))
+            return true;
+        else
+            return false;
+    }).focus(function () {
+    //禁用输入法
+        this.style.imeMode = 'disabled';
+    }).bind("paste", function () {
+    //获取剪切板的内容
+        var clipboard = window.clipboardData.getData("Text");
+        if (/^\d+$/.test(clipboard))
+            return true;
+        else
+            return false;
+    });
+};
+
+$("#btn_delete").click(function () {
+    var selectedData = $("#tb_interval_list").bootstrapTable('getSelections');
+    var post_data = {"data":JSON.stringify(selectedData)};
+    if(selectedData.length <= 0){
+        $("#result_label_del").html("请选中一行");
+{#        alert("请选中一行");#}
+    }else {
+{#        alert(JSON.stringify(selectedData));#}
+        $.ajax({
+            url: "{% url 'test1:delete_crontab' %}",
+            type: "post",
+            data: post_data,
+            success:function (data) {
+                if(data.status == 'true'){
+                    $("#result_label_del").html("删除成功");
+                    $("#tb_crontab_list").bootstrapTable('refresh');
+                }else{
+                    $("#result_label_del").html("删除失败");
+                }
+            }
+        });
+    }
+
+
+});
+
+</script>
+
+{% endblock %}

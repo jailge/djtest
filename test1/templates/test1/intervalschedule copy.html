@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+
+{% block title %}间隔计划{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/plugins/bootstrap3-editable/css/bootstrap-editable.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-table/bootstrap-table.min.css">
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <h1>
+        间隔计划
+        <small>Interval Schedule</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="{% url 'test1:index' %}"><i class="fa fa-dashboard"></i>主页 </a> </li>
+        <li class="active">间隔计划</li>
+    </ol>
+</section>
+
+
+    <div class="row">
+    <div class="col-md-6">
+        <table class="table table-hover" >
+				<thead>
+					<tr>
+						<th>
+							编号
+						</th>
+						<th>
+							间隔时间
+						</th>
+					</tr>
+				</thead>
+				<tbody id="tbody_result">
+				</tbody>
+			</table>
+    </div>
+    <div class="col-md-6">
+        <form class="form-horizontal">
+        <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">每</label>
+        <div class="col-sm-3">
+
+         <input class="form-control onlyNum" type="text" id="every" name="every" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">时间</label>
+        <div class="col-sm-3">
+            <select id="period" class="form-control">
+                <option value="0">选择</option>
+                <option value="days">天</option>
+                <option value="hours">时</option>
+                <option value="minutes">分</option>
+                <option value="seconds">秒</option>
+                <option value="microseconds">微妙</option>
+            </select>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+        <button type="button" id="save_interval" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            保存计划
+        </button>
+        </div>
+    </div>
+
+            <!-- 模态框 -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">保存结果</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label id="result_label"></label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+    </form>
+        <a href="#" id="username" data-type="text" data-title="用户名">用户名</a>
+<table class="table table-striped table-bordered table-hover" id="cusTable"></table>
+    </div>
+    </div>
+
+<!-- bootstrap Table -->
+
+{#<table id="tb_user"></table>#}
+
+
+{#    <div class="row">#}
+{#    <div class="col-xs-6 col-sm-5">#}
+{##}
+{#        <table class="table table-bordered" id="table-result" style="font-size: 15px">#}
+{#        <thead>#}
+{#        <tr>#}
+{#        <th>编号</th>#}
+{#        <th>间隔时间</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#         <tbody id="tbody_result"></tbody>#}
+{#    </table>#}
+{##}
+{#    </div>#}
+{#    <div class="col-xs-6 col-sm-5">#}
+{#        #}
+{#    </div>#}
+{#    </div>#}
+
+
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/plugins/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script src="/static/plugins/bootstrap-table/bootstrap-table.js"></script>
+<script src="/static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+<script src="/static/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+
+    <script src='/static/js/jquery-3.3.1.min.js'></script>
+    <script src="/static/js/csrf.js"></script>
+
+    <script>
+
+    $(document).ready(function () {
+        $(".onlyNum").onlyNum();
+
+        get_interval_list();
+        window.setInterval(get_interval_list, 5000);
+
+    });
+
+
+    $("input[name='every']").keyup(function () {
+        $(this).val($(this).val().replace(/D|^0/g,''));
+
+    }).bind("paste",function () {
+        $(this).val($(this).val().replace(/D|^0/g,''));
+    }).css("ime-mode","disabled");
+
+/*
+*获取间隔计划列表
+ */
+    function get_interval_list() {
+        var post_data = {"status":'interval'};
+        var tbody = $("#tbody_result");
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_interval_list_p' %}",
+            data: post_data,
+            success:function (data) {
+                var str = "";
+                for(var i=0;i<data.interval_list.length;i++){
+                    str += "<tr>"+
+                            "<td>"+data.interval_list[i]['id']+"</td>"+
+                            "<td>"+data.interval_list[i]['period']+"</td></tr>";
+                }
+                tbody.html(str);
+            }
+
+        });
+    }
+
+    function get_para() {
+        var period = $("#period").val();
+        var every = $("#every").val();
+        var para_data = {
+            'every': every,
+            'period': period
+        };
+        return para_data;
+    }
+
+    $("#save_interval").click(function () {
+        var post_data = get_para();
+        $.post("{% url 'test1:add_interval_every_period' %}", post_data, function(data){
+{#            alert(data['status']);#}
+            $("#result_label").html(data['status']);
+            if(data['status'] == 'true'){
+                $("#result_label").html("保存成功");
+
+            }else{
+                $("#result_label").html("保存失败");
+            }
+        });
+    });
+
+    /*
+* 点击关闭按钮
+*/
+    $("#close").click(function () {
+        clean_and_focus();
+    });
+
+
+    /*
+* 清空页面并获取焦点
+ */
+     function clean_and_focus() {
+         $("#every").val("").focus();
+         $("#period").val("0");
+     }
+
+    // ----------------------------------------------------------------------
+// <summary>
+// 限制只能输入数字
+// </summary>
+// ----------------------------------------------------------------------
+$.fn.onlyNum = function () {
+    $(this).keypress(function (event) {
+        var eventObj = event || e;
+        var keyCode = eventObj.keyCode || eventObj.which;
+        if ((keyCode >= 48 && keyCode <= 57))
+            return true;
+        else
+            return false;
+    }).focus(function () {
+    //禁用输入法
+        this.style.imeMode = 'disabled';
+    }).bind("paste", function () {
+    //获取剪切板的内容
+        var clipboard = window.clipboardData.getData("Text");
+        if (/^\d+$/.test(clipboard))
+            return true;
+        else
+            return false;
+    });
+};
+
+    /**
+     * bootstrap Table
+     */
+
+
+
+
+    </script>
+
+{% endblock %}

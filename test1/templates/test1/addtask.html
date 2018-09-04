@@ -1,0 +1,614 @@
+{% extends 'base.html' %}
+
+{% block title %}任务新增{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/plugins/validator/bootstrapValidator.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+    <style>
+    .state1{color:#aaa;}
+    .state2{color:#000;}
+    .state3{color:red;}
+    .state4{color:green;}
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <section class="content-header">
+    <h1>
+        任务新增
+        <small>Add Task</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="{% url 'test1:index' %}"><i class="fa fa-dashboard"></i>主页 </a> </li>
+        <li class="active">任务新增</li>
+    </ol>
+    </section>
+
+{#   <form action='{% url 'test1:add_delay' %}' method="get" >#}
+{#加数1<input name="first_d" id="first_d" type="text"><br>#}
+{#加数2<input name="second_d" id="second_d" type="text"><br>#}
+{##}
+{#<input type="submit" value="运算">#}
+{#</form>#}
+{##}
+{#   <form action='{% url 'test1:add_timeout' %}' method="get" >#}
+{#加数1<input name="first_t" id="first_t" type="text"><br>#}
+{#加数2<input name="second_t" id="second_t" type="text"><br>#}
+{##}
+{#<input type="submit" value="运算">#}
+{#</form>#}
+{##}
+{##}
+{#    <form action='{% url 'test1:db_exec' %}' method="get">#}
+{#    exec<input name="sql" id="sql" type="text"><br>#}
+{#        para<input name="para" id="para" type="text"><br>#}
+{#    <input type="submit" value="执行">#}
+{##}
+{#    </form>#}
+
+{#<form method="post">#}
+{#    {% csrf_token %}#}
+
+{#</form>#}
+
+<div class="row">
+    <div class="col-xs-2 col-sm-2">
+    </div>
+    <div class="col-xs-14 col-sm-8">
+
+        <form class="form-horizontal" id="default-form">
+        <div class="form-group">
+        <label for="task" class="col-sm-2 control-label ">任务名称</label>
+        <div class="col-sm-10">
+         <input class="form-control" type="text" id="task_name" name="task_name" value="">
+            <label id="task_name_alert"></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">任务</label>
+        <div class="col-sm-10">
+{#         <input class="form-control" type="text" id="task" name="task" value="" >#}
+            <select id="tasks" class="form-control" name="tasks">
+                <option value="" >选择</option>
+        </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">参数</label>
+        <div class="col-sm-10">
+{#        <input class="form-control" type="text" id="kwargs" name="kwargs" value="{{ task.kwargs }}">#}
+            <textarea class="form-control" rows="3" id="kwargs" placeholder='{"sql1":"para1"}'></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">Exchange</label>
+        <div class="col-sm-10">
+{#        <input class="form-control" type="text" id="exchange" name="exchange" value="">#}
+             <select id="exchanges" class="form-control" name="exchange">
+
+            <option value="" >选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">Queue</label>
+        <div class="col-sm-10">
+{#        <input class="form-control" type="text" id="queue" name="queue" value="">#}
+            <select id="queue" class="form-control" name="queue">
+            <option value="" >选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">Routing_key</label>
+        <div class="col-sm-10">
+{#        <input class="form-control" type="text" id="routing_key" name="routing_key" value="">#}
+            <label id="rk"></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">计划</label>
+        <div class="col-sm-10">
+            <select id="interval_list" class="form-control" name="interval_list">
+                <option value="0">选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">是否启用</label>
+        <div class="col-sm-10">
+        <label class="checkbox-inline">
+            <input type="checkbox" id="enabled" name="enabled">启用
+        </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" name="submit" id="save_task" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            保存任务
+        </button>
+        </div>
+    </div>
+
+            <!-- 模态框 -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">保存结果</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label id="result_label"></label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+    </form>
+
+
+    </div>
+    <div class="col-xs-2 col-sm-2">
+    </div>
+</div>
+
+
+
+{#    <form action="{% url 'test1:add_interval' %}" method="get">#}
+{#    every<input name="every" id="every" type="text" ><br>#}
+{#    period<input name="period" id="period" type="text" width="300"><br>#}
+{#    <input type="submit" value="增加定时">#}
+{#    </form>#}
+
+<button id="alert">btn</button>
+
+{% endblock %}
+
+{% block script %}
+    <script src='/static/js/jquery-3.3.1.min.js'></script>
+    <script src="/static/js/csrf.js"></script>
+    <script src="/static/plugins/validator/bootstrapValidator.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script>
+{#    $.ajaxSetup({#}
+{#        data: {csrfmiddlewaretoken: '{{ csrf_token }}' },#}
+{#    });#}
+    $(document).ready(function () {
+        $("#task_name").val("").focus();
+        $("#save_task").attr({"disabled":"disabled"});
+        get_exchanges_list();
+        get_queues_list();
+        get_interval_list();
+        get_tasks();
+{#        isAllSelect();#}
+    });
+
+        /*
+* 获取 tasks 列表
+ */
+    function get_tasks() {
+        $.get("{% url 'test1:get_tasks' %}", function(data){
+            var tl = data.task_list;
+            var ts = $("#tasks");
+            $.each(tl, function (i,n) {
+                ts.append('<option >'+n+'</option>')
+            });
+        })
+    }
+
+/*
+* 获取 interval 列表
+ */
+    function get_interval_list() {
+        $.getJSON("{% url 'test1:get_interval_list' %}", function(data){
+            var ilist = data.rows;
+            var interval_list = $("#interval_list");
+            $.each(ilist, function (i,n) {
+                interval_list.append('<option value="'+n.id+'">'+n.period+'</option>')
+            });
+        });
+    }
+
+
+    $("#display").click(function () {
+        var post_data = get_para();
+        $.post("{% url 'test1:display_new_tasks' %}", post_data, function(data){
+            alert("task_name:"+data['task_name']+"===task:"+data['task']+
+                "===id:"+data['interval_id']+'===enabled:'+data['enabled']+
+                    "===arguments:"+data['kwargs']+"===Queue:"+data['queue']
+            )
+        });
+{#        a = $("#interval_list").val();#}
+{#        alert(a);#}
+    });
+
+/*
+* 点击保存按钮
+ */
+    $("#save_task").click(function () {
+        var post_data = get_para();
+        {#alert(post_data['task']);#}
+        if (post_data['task'] == '选择' || post_data['queue'] == '选择' || post_data['exchange'] == '选择'){
+            $("#result_label").text("有字段为空");
+        }else {
+        $.post("{% url 'test1:add_task' %}", post_data, function(data){
+{#            alert(data['status']);#}
+            if(data['status'] == 'true'){
+                $("#result_label").text("保存成功");
+
+            }else{
+                $("#result_label").text("保存失败");
+            }
+{#            $("#interval_list").empty();#}
+        });}
+    });
+
+    $("#exchanges").change(function () {
+{#        alert($("#exchanges").find("option:selected").val());#}
+        exchange = $("#exchanges").find("option:selected").val();
+        queue = $("#queue").find("option:selected").val();
+        post_data = {
+            'exchange': exchange,
+            'queue': queue
+        };
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_routing_key_with_eqid' %}",
+            data: post_data,
+            success: function (data) {
+                var rk = data.routing_key;
+                var rk_l = $("#rk");
+                if(rk.length > 0){
+                    $.each(rk, function (i,n) {
+{#                    alert(n.name);#}
+                    rk_l.text(n.name) ;
+                    })
+                }else{
+                    rk_l.text('') ;
+                }
+
+            }
+        })
+
+    });
+
+    $("#queue").change(function () {
+{#        alert($("#exchanges").find("option:selected").val());#}
+        exchange = $("#exchanges").find("option:selected").val();
+        queue = $("#queue").find("option:selected").val();
+        post_data = {
+            'exchange': exchange,
+            'queue': queue
+        };
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_routing_key_with_eqid' %}",
+            data: post_data,
+            success: function (data) {
+                var rk = data.routing_key;
+                var rk_l = $("#rk");
+                if(rk.length > 0){
+                    $.each(rk, function (i,n) {
+{#                    alert(n.name);#}
+                    rk_l.text(n.name) ;
+                    })
+                }else{
+                    rk_l.text('');
+                }
+
+            }
+        })
+
+    });
+
+/*
+* 点击关闭按钮
+*/
+    $("#close").click(function () {
+        clean_and_focus();
+    });
+
+/*
+* 获取页面字段值
+ */
+
+    function get_para() {
+        var task_name = $("#task_name").val();
+{#        var task = $("#task").val();#}
+        var task = $("#tasks").find("option:selected").text();
+        var enabled = 0;
+        if($("#enabled").prop('checked')){
+            enabled = 1;
+        }else{
+            enabled = 0;
+        }
+        var interval_id = $("#interval_list").val();
+        var kwargs = $("#kwargs").val().replace(/[\r\n]/g,"");
+{#        var queue = $("#queue").val();#}
+{#        var exchange = $("#exchange").val();#}
+        var queue = $("#queue").find("option:selected").text();
+        var exchange = $("#exchanges").find("option:selected").text();
+{#        var routing_key = $("#routing_key").val();#}
+        var routing_key = $("#rk").text();
+         var para_data = {
+             'task_name': task_name,
+             'task': task,
+             'enabled': enabled,
+             'interval_id': interval_id,
+             'kwargs': kwargs,
+             'queue': queue,
+             'exchange': exchange,
+             'routing_key': routing_key
+         };
+         return para_data
+    }
+
+/*
+* 清空页面并获取焦点
+ */
+     function clean_and_focus() {
+         $("#task_name").val("").focus();
+{#         $("#task").val("");#}
+         $("#tasks").val("");
+         $("#kwargs").val("");
+         $("#exchange").val("");
+         $("#queue").val("");
+         $("#rk").text("");
+         $("#interval_list").val("");
+     }
+
+
+
+
+    $("#show_checkbox").click(function () {
+        if($("#enabled").prop('checked')){
+            var is_checked = 1;
+            alert($("#enabled").prop("checked"));
+        }else{
+            alert('0');
+        }
+    });
+
+
+       /*
+* 获取 exchanges 列表
+ */
+    function get_exchanges_list() {
+        var post_data = {"interval_id": "1"};
+
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_exchanges' %}",
+            data: post_data,
+            success:function (data) {
+                var str = "";
+                var ilist = data.exchanges_list;
+                var exchangesllist = $("#exchanges");
+                $.each(ilist, function (i, n) {
+                    exchangesllist.append('<option value="'+n.id+'">'+n.name+'</option>')
+                });
+            }
+        });
+    }
+         /*
+* 获取 queues 列表
+ */
+    function get_queues_list() {
+        var post_data = {"interval_id": "1"};
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_queues' %}",
+            data: post_data,
+            success:function (data) {
+                var str = "";
+                var ilist = data.queues_list;
+                var queuesllist = $("#queue");
+                $.each(ilist, function (i, n) {
+                    queuesllist.append('<option value="'+n.id+'">'+n.name+'</option>')
+                });
+            }
+        });
+    }
+
+    function isAllSelect(){
+        var selects = $("select option:selected");
+        $.each(selects, function (val,index) {
+            if(index==0){
+                $("#save_task").attr({"disabled":"disabled"});
+            }
+        });
+        $("#save_task").removeAttr("disabled");
+    }
+
+
+{#    function get_interval_list() {#}
+{#        var url = '{% url 'test1:get_interval_list' %}';#}
+{#        var para = {};#}
+{#        $.post(url, function (jdata) {#}
+{#            var data = $.parseJSON(jdata);#}
+{#            var ilist = data.interval_list;#}
+{#            var interval_list = $("#interval_list");#}
+{#            $.each(ilist, function (i,n) {#}
+{#                interval_list.append('<option value="'+n.id+'">'+n.period+'</option>')#}
+{#            });#}
+{#        })#}
+{#    }#}
+
+{#    $("#display").click(function(){#}
+{#        var post_data = {#}
+{#          'id': $("#interval_list").val(),#}
+{#        };#}
+{#        $.ajax({#}
+{#            url: {% url 'test1:display_selected_interval' %},#}
+{#            type: "POST",#}
+{#            data: post_data,#}
+{#            success: function (data) {#}
+{#                data = JSON.parse(data);#}
+{#                alert(data["id"]);#}
+{#            }#}
+{#        });#}
+{#    });#}
+
+{#    $("#task_name").blur(function () {#}
+{#        if($(this).val()=="" || $.trim($(this).val()).length==0){#}
+{#            $("#task_name_alert").text("不能为空");#}
+{#        }#}
+{#    })#}
+
+    </script>
+
+{#    <script>#}
+{#    $(function () {#}
+{#        var ok1 = false;#}
+{#        var ok2 = false;#}
+{#        var ok3 = false;#}
+{#        var ok4 = false;#}
+{#        var ok5 = false;#}
+{#        var ok6 = false;#}
+{#        var ok7 = false;#}
+{#        var ok8 = false;#}
+{#        $('input[id="task_name"]').focus(function () {#}
+{#            $(this).next().text('不能为空').removeClass('state1').addClass('state2');#}
+{#        }).blur(function () {#}
+{#            if($(this).val().length >= 1 && $(this).val()!='' && $(this).val()!=' '){#}
+{#                $(this).next().text('输入成功').removeClass('state1').addClass('state4');#}
+{#                ok1 = true;#}
+{##}
+{#                $("#save_task").removeAttr("disabled");#}
+{#            }else{#}
+{#                $(this).next().text('名称不能为空').removeClass('state1').addClass('state3');#}
+{#                $("#save_task").attr({"disabled":"disabled"});#}
+{#            }#}
+{#        });#}
+{#        var selects = $("select option:selected");#}
+{#        $.each(selects, function (val,index) {#}
+{#            if(index==0){#}
+{#                ok2 = false;#}
+{#            }else{#}
+{#                ok2 = true#}
+{#            }#}
+{#        });#}
+{#        if(ok1 == true && ok2 == true){#}
+{#            $("#save_task").removeAttr("disabled");#}
+{#        }#}
+{##}
+{#    })#}
+{#    </script>#}
+
+    <script>
+    $(function () {
+        $("#default-form").bootstrapValidator({
+            message: '无效',
+            feedbackIcons:{
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields:{
+                task_name: {
+                    message: '无效',
+                    validators: {
+                        notEmpty: {
+                            message: '不能为空'
+                        },
+                        stringLength: {
+                            min: 2,
+                            max: 100,
+                            message : '任务名必须1-100字符'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            message: '任务名只能包含字母、数字、点和下划线'
+                        }
+                    }
+                },
+                tasks: {
+                    validators: {
+                        notEmpty: {
+                            message: '不能为空'
+                        }
+                    }
+                },
+                exchange: {
+                    validators: {
+                        notEmpty: {
+                            message: '不能为空'
+                        }
+                    }
+                },
+                queue: {
+                    validators: {
+                        notEmpty: {
+                            message: '不能为空'
+                        }
+                    }
+                },
+
+            }
+        });
+    });
+
+    $("#alert").click(function () {
+        alert($("#interval_list").val());
+        alert($("#kwargs").val().replace(/[\r\n]/g,""));
+    })
+    </script>
+
+{#    <script>#}
+{#    $("#display").click(function(){#}
+{#        var post_data = {#}
+{#          'id': $("#interval_list").val(),#}
+{#        };#}
+{#        $.ajax({#}
+{#            url: {% url 'test1:display_selected_interval' %},#}
+{#            type: "POST",#}
+{#            data: post_data,#}
+{#            success: function (data) {#}
+{#                data = JSON.parse(data);#}
+{#                if (data["status"] == 1){#}
+{##}
+{#                }else{#}
+{#                    alert(data["id"]);#}
+{#                }#}
+{#            }#}
+{#        });#}
+{#    });#}
+{#    </script>#}
+
+
+{#    <script>#}
+{#    $(function () {#}
+{#        $.get("{% url 'test1:get_interval_list' %}", function(data){#}
+{#            var ilist = data.interval_list;#}
+{#            var interval_list = $("#interval_list");#}
+{#            $.each(ilist, function (i,n) {#}
+{#                interval_list.append('<option value="'+n.id+'">'+n.period+'</option>')#}
+{#            });#}
+{#        });#}
+{#    });#}
+{#    </script>#}
+
+{#    <script>#}
+{#    $(function () {#}
+{#        $("#display").click(function(){#}
+{#            a = $("#interval_list").val();#}
+{#            alert(a);#}
+{#        });#}
+{##}
+{#    })#}
+{#    </script>#}
+
+
+{% endblock %}

@@ -1,0 +1,53 @@
+
+
+from django.conf.urls import url
+from test1 import views
+
+app_name = 'test1'
+
+urlpatterns = [
+    url(r'^$', views.login, name='login'),
+    url(r'^loginVerify/$', views.loginVerify, name='loginVerify'),
+    url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^index/$', views.index, name='index'),
+    url(r'^detail/(?P<task_id>[0-9]+)/$', views.detail, name='detail'),
+    url(r'^detail_p/$', views.detail_p, name='detail_p'),
+    url(r'^crontab_schedule/$', views.crontab_schedule, name='crontab_schedule'),
+    url(r'^rabbitmq/$', views.rabbitmq, name='rabbitmq'),
+    url(r'^rabbitmq_sync/$', views.rabbitmq_sync, name='rabbitmq_sync'),
+    url(r'^rabbitmq_add/$', views.rabbitmq_add, name='rabbitmq_add'),
+    url(r'^rabbitmq_add_ex_qu_rk/$', views.add_ex_qu_rk, name='rabbitmq_add_ex_qu_rk'),
+    url(r'^rabbitmq_queue_monitor/$', views.queue_monitor, name='rabbitmq_queue_monitor'),
+    url(r'^get_tasks/$', views.get_registry_task, name='get_tasks'),
+    url(r'^get_exchanges/$', views.get_exchanges, name='get_exchanges'),
+    url(r'^get_exchanges_table/$', views.get_exchanges_table, name='get_exchanges_table'),
+    url(r'^get_queues/$', views.get_queues, name='get_queues'),
+    url(r'^get_queues_table/$', views.get_queues_table, name='get_queues_table'),
+    url(r'^get_routing_key_with_eqid/$', views.get_routing_key_eqid, name='get_routing_key_with_eqid'),
+    url(r'^add_interval_every_period/$', views.add_interval_every_period, name='add_interval_every_period'),
+    url(r'^interval_schedule/$', views.interval_schedule, name='interval_schedule'),
+    url(r'^addtask/$', views.addtask, name='addtask'),
+    url(r'^add_test$', views.add_test, name='add_test'),
+    url(r'^add/$', views.add1, name='add1'),
+    url(r'^result$', views.result, name='result'),
+    url(r'^add_delay$', views.add_delay, name='add_delay'),
+    url(r'^add_timeout$', views.add_timeout, name='add_timeout'),
+    url(r'^db_exec$', views.db_exec, name='db_exec'),
+    url(r'^add_task$', views.add_task, name='add_task'),
+    url(r'^update_task$', views.update_task, name='update_task'),
+    url(r'^get_tasks_list', views.get_tasks_list, name='get_tasks_list'),
+    url(r'^get_running_tasks_table', views.get_running_tasks_table, name='get_running_tasks_table'),
+    url(r'^add_interval$', views.add_interval, name='add_interval'),
+    url(r'^get_interval_list$', views.get_interval, name='get_interval_list'),
+    url(r'^get_interval_list_p$', views.get_interval_list_p, name='get_interval_list_p'),
+    url(r'^get_interval_list_sep$', views.get_interval_list_sep, name='get_interval_list_sep'),
+    url(r'^delete_interval$', views.delete_interval, name='delete_interval'),
+    url(r'^update_interval$', views.update_interval, name='update_interval'),
+    url(r'^get_crontab_list_sep$', views.get_crontab_list_sep, name='get_crontab_list_sep'),
+    url(r'^update_crontab$', views.update_crontab, name='update_crontab'),
+    url(r'^add_crontab$', views.add_crontab_all, name='add_crontab'),
+    url(r'^delete_crontab$', views.delete_crontab, name='delete_crontab'),
+    url(r'^display_new_tasks$', views.display_new_tasks, name='display_new_tasks'),
+    url(r'^get_tasks_status', views.get_tasks_status_p, name='get_tasks_status'),
+    url(r'^chart_bar', views.chart_bar, name='chart_bar'),
+]

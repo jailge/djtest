@@ -1,0 +1,715 @@
+{% extends 'base.html' %}
+
+{% block title %}任务详细{% endblock %}
+
+{% block css %}
+
+    <link rel="stylesheet" href="/static/css/htmleaf-demo.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <style type="text/css">
+		.panel-group .panel{
+		    border:0px none;
+		    border-radius: 0px;
+		    box-shadow: none;
+		    border-bottom: 1px solid #676767;
+		}
+		.panel-heading{
+		    padding: 0;
+		}
+		.panel-default > .panel-heading {
+		    color: #7a4b94;
+		}
+		.panel-title{
+		    position: relative;
+		}
+		.panel-title > a{
+		    display: block;
+		    padding: 11px 35px;
+		    background: #fff;
+		    font-weight: 600;
+		}
+		.panel-title > a:hover,
+		.panel-title > a:focus{
+		    text-decoration: none;
+		    outline: none;
+		}
+		.panel-title a:before{
+		    content: "\f068";
+		    font-family: 'FontAwesome';
+		    margin-right: 10px;
+		    color:#7a4b94;
+		    font-weight: normal;
+		    position: absolute;
+		    left:10px;
+		    top:11px;
+		}
+		.panel-title .collapsed:before{
+		    content: "\f067";
+		}
+		.panel-title a.collapsed{
+		    color:#7a4b94;
+		    font-weight: normal;
+		}
+		.panel-body{
+		    color:#727272;
+		    padding: 5px 10px 30px;
+		    line-height: 23px;
+		    letter-spacing: 1px;
+		}
+		.panel-default > .panel-heading + .panel-collapse > .panel-body{
+		    border-top: 0px none;
+		}
+	</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="content-header">
+    <h1>
+        任务详细
+        <small>Task Detail</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="{% url 'test1:index' %}"><i class="fa fa-table"></i>任务列表 </a> </li>
+        <li class="active">任务详细</li>
+    </ol>
+    </section>
+
+
+<br><br>
+
+    <div class="row">
+    <div class="col-xs-2 col-sm-2">
+    </div>
+    <div class="col-xs-14 col-sm-8">
+    <div class="demo">
+	        <div class="container">
+	            <div class="row">
+	                <div class="col-md-offset-0 col-md-12">
+	                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	                        <div class="panel panel-default">
+	                            <div class="panel-heading" role="tab" id="headingOne">
+	                                <h4 class="panel-title">
+	                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+	                                        任务详细
+	                                    </a>
+	                                </h4>
+	                            </div>
+	                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+	                                <div class="panel-body">
+	                                    <table class="table table-striped">
+    <tr>
+        <td><h5>任务名称</h5></td>
+        <td><h5><label id="name">{{ task.name }}</label></h5></td>
+    </tr>
+    <tr>
+        <td><h5>任务</h5></td>
+        <td><h5><label id="name">{{ task.task }}</label></h5></td>
+    </tr>
+    <tr>
+        <td><h5>参数</h5></td>
+        <td><h5><label id="name">{{ task.kwargs }}</label></h5></td>
+    </tr>
+    <tr>
+        <td><h5>Exchange</h5></td>
+        <td><h5><label id="name">{{ task.exchange }}</label></h5></td>
+    </tr>
+    <tr>
+        <td><h5>Queue</h5></td>
+        <td><h5><label id="name">{{ task.queue }}</label></h5></td>
+    </tr>
+    <tr>
+        <td><h5>RoutingKey</h5></td>
+        <td><h5><label id="name">{{ task.routing_key }}</label></h5></td>
+    </tr>
+    <tr>
+        <td><h5>执行计划</h5></td>
+        <td><h5><label id="name">
+        {% for i in interval %}
+            {{ i.every }} {{ i.period }}
+        {% endfor %}</label></h5></td>
+    </tr>
+    <tr>
+        <td><h5>是否启用</h5></td>
+        <td>
+            {% if task.enabled == 1 %}
+                <label id="enabled">已启用</label>
+                {% elif task.enabled == 0 %}
+                <label id="enabled">未启用</label>
+            {% endif %}
+        </td>
+    </tr>
+
+    </table>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="panel panel-default">
+	                            <div class="panel-heading" role="tab" id="headingTwo">
+	                                <h4 class="panel-title">
+	                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+	                                        修改任务
+	                                    </a>
+	                                </h4>
+	                            </div>
+	                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+	                                <div class="panel-body">
+	                                      <form class="form-horizontal">
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">任务</label>
+        <div class="col-sm-10">
+{#         <input class="form-control" type="text" id="task" name="task" value="{{ task.task }}">#}
+        <select id="tasks" class="form-control">
+{#            {% for t in tasks %}#}
+                <option value="0" selected="selected">{{ task.task }}</option>
+{#            {% endfor %}#}
+        </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">参数</label>
+        <div class="col-sm-10">
+{#        <input class="form-control" type="text" id="kwargs" name="kwargs" value="{{ task.kwargs }}">#}
+            <textarea class="form-control" rows="3" id="kwargs">{{ task.kwargs }}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">Exchange</label>
+        <div class="col-sm-10">
+{#        <input class="form-control" type="text" id="exchange" name="exchange" value="{{ task.exchange }}">#}
+            <select id="exchanges" class="form-control">
+            {% for i in exchanges %}
+            <option value="{{ i.id }}" selected="selected">{{ i.name }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">Queue</label>
+        <div class="col-sm-10">
+{#        <input class="form-control" type="text" id="queue" name="queue" value="{{ task.queue }}">#}
+            <select id="queue" class="form-control">
+            {% for i in queues %}
+            <option value="{{ i.id }}" selected="selected">{{ i.name }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">Routing_key</label>
+        <div class="col-sm-10">
+{#        <input class="form-control" type="text" id="routing_key" name="routing_key" value="{{ task.routing_key }}">#}
+            <label id="rk">{{ task.routing_key }}</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">计划</label>
+        <div class="col-sm-10">
+            <select id="interval_list" class="form-control">
+            {% for i in interval %}
+            <option value="{{ i.id }}" selected="selected">{{ i.every }} {{ i.period }}</option>
+{#        {{ i.every }}{{ i.period }}#}
+            {% endfor %}
+{#    <option value=""></option>#}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="task" class="col-sm-2 control-label">是否启用</label>
+        <div class="col-sm-10">
+        <label class="checkbox-inline">
+            {% if task.enabled == 1 %}
+                <input type="checkbox" id="enabled1" checked="checked">启用
+            {% elif task.enabled == 0 %}
+                <input type="checkbox" id="enabled2">启用
+            {% endif %}
+{#            <input type="checkbox" id="enabled">启用#}
+        </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+        <button type="button" id="update_task" class="btn btn-primary" data-toggle="modal" data-target="#myModal">保存</button>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">更新结果</h4>
+                        </div>
+                        <div class="modal-body">
+                            <label id="result_label"></label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+    </form>
+	                                </div>
+	                            </div>
+	                        </div>
+
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+{#    <table class="table table-striped">#}
+{#    <tr>#}
+{#        <td><h5>任务名称</h5></td>#}
+{#        <td><h5><label id="name">{{ task.name }}</label></h5></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <td><h5>任务</h5></td>#}
+{#        <td><h5><label id="name">{{ task.task }}</label></h5></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <td><h5>参数</h5></td>#}
+{#        <td><h5><label id="name">{{ task.kwargs }}</label></h5></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <td><h5>Exchange</h5></td>#}
+{#        <td><h5><label id="name">{{ task.exchange }}</label></h5></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <td><h5>Queue</h5></td>#}
+{#        <td><h5><label id="name">{{ task.queue }}</label></h5></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <td><h5>RoutingKey</h5></td>#}
+{#        <td><h5><label id="name">{{ task.routing_key }}</label></h5></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <td><h5>执行计划</h5></td>#}
+{#        <td><h5><label id="name">#}
+{#        {% for i in interval %}#}
+{#            {{ i.every }} {{ i.period }}#}
+{#        {% endfor %}</label></h5></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <td><h5>是否启用</h5></td>#}
+{#        <td>#}
+{#            {% if task.enabled == 1 %}#}
+{#                <label id="enabled">已启用</label>#}
+{#                {% elif task.enabled == 0 %}#}
+{#                <label id="enabled">未启用</label>#}
+{#            {% endif %}#}
+{#        </td>#}
+{#    </tr>#}
+{##}
+{#    </table>#}
+    </div>
+    <div class="col-xs-2 col-sm-2">
+    </div>
+    </div>
+
+    <div class="row">
+    <div class="col-xs-2 col-sm-2">
+    </div>
+    <div class="col-xs-14 col-sm-8">
+{#    <form class="form-horizontal">#}
+{#    <div class="form-group">#}
+{#        <label for="task" class="col-sm-2 control-label">任务</label>#}
+{#        <div class="col-sm-10">#}
+{#         <input class="form-control" type="text" id="task" name="task" value="{{ task.task }}">#}
+{#        <select id="tasks" class="form-control">#}
+{#            {% for t in tasks %}#}
+{#                <option value="0" selected="selected">{{ task.task }}</option>#}
+{#            {% endfor %}#}
+{#        </select>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="form-group">#}
+{#        <label for="task" class="col-sm-2 control-label">参数</label>#}
+{#        <div class="col-sm-10">#}
+{#        <input class="form-control" type="text" id="kwargs" name="kwargs" value="{{ task.kwargs }}">#}
+{#            <textarea class="form-control" rows="3" id="kwargs">{{ task.kwargs }}</textarea>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="form-group">#}
+{#        <label for="task" class="col-sm-2 control-label">Exchange</label>#}
+{#        <div class="col-sm-10">#}
+{#        <input class="form-control" type="text" id="exchange" name="exchange" value="{{ task.exchange }}">#}
+{#            <select id="exchanges" class="form-control">#}
+{#            {% for i in exchanges %}#}
+{#            <option value="{{ i.id }}" selected="selected">{{ i.name }}</option>#}
+{#            {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="form-group">#}
+{#        <label for="task" class="col-sm-2 control-label">Queue</label>#}
+{#        <div class="col-sm-10">#}
+{#        <input class="form-control" type="text" id="queue" name="queue" value="{{ task.queue }}">#}
+{#            <select id="queue" class="form-control">#}
+{#            {% for i in queues %}#}
+{#            <option value="{{ i.id }}" selected="selected">{{ i.name }}</option>#}
+{#            {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="form-group">#}
+{#        <label for="task" class="col-sm-2 control-label">Routing_key</label>#}
+{#        <div class="col-sm-10">#}
+{#        <input class="form-control" type="text" id="routing_key" name="routing_key" value="{{ task.routing_key }}">#}
+{#            <label id="rk">{{ task.routing_key }}</label>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="form-group">#}
+{#        <label for="task" class="col-sm-2 control-label">计划</label>#}
+{#        <div class="col-sm-10">#}
+{#            <select id="interval_list" class="form-control">#}
+{#            {% for i in interval %}#}
+{#            <option value="{{ i.id }}" selected="selected">{{ i.every }} {{ i.period }}</option>#}
+{#        {{ i.every }}{{ i.period }}#}
+{#            {% endfor %}#}
+{#    <option value=""></option>#}
+{#            </select>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="form-group">#}
+{#        <label for="task" class="col-sm-2 control-label">是否启用</label>#}
+{#        <div class="col-sm-10">#}
+{#        <label class="checkbox-inline">#}
+{#            {% if task.enabled == 1 %}#}
+{#                <input type="checkbox" id="enabled1" checked="checked">启用#}
+{#            {% elif task.enabled == 0 %}#}
+{#                <input type="checkbox" id="enabled2">启用#}
+{#            {% endif %}#}
+{#            <input type="checkbox" id="enabled">启用#}
+{#        </label>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="form-group">#}
+{#        <div class="col-sm-offset-2 col-sm-10">#}
+{#        <button type="button" id="update_task" class="btn btn-primary" data-toggle="modal" data-target="#myModal">保存</button>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <!-- 模态框 -->#}
+{#            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" aria-hidden="true">#}
+{#                <div class="modal-dialog">#}
+{#                    <div class="modal-content">#}
+{#                        <div class="modal-header">#}
+{#                            <h4 class="modal-title">更新结果</h4>#}
+{#                        </div>#}
+{#                        <div class="modal-body">#}
+{#                            <label id="result_label"></label>#}
+{#                        </div>#}
+{#                        <div class="modal-footer">#}
+{#                            <button type="button" class="btn btn-default" data-dismiss="modal" id="close">#}
+{#                                关闭#}
+{#                            </button>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+{##}
+{##}
+{#    </form>#}
+    </div>
+
+    <div class="col-xs-2 col-sm-2">
+    </div>
+    </div>
+
+
+
+
+
+    id<label id="id" >{{ task.id }}</label>
+    <label id="interval_id" >{{ task.interval_id }}</label><br>
+    <button type="button" id="btn">btn</button>
+
+{#rk<label id="rk"></label>#}
+
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script src='/static/js/jquery-3.3.1.min.js'></script>
+    <script src="/static/js/csrf.js"></script>
+    <script>
+    $(document).ready(function () {
+
+{#        get_detail();#}
+        get_queues_list();
+        get_interval_list();
+        get_exchanges_list();
+        get_tasks();
+
+{#        window.setInterval(get_interval_list, 5000)#}
+
+
+
+    });
+
+    $("#btn").click(function () {
+        if($("#enabled1").prop('checked') || $("#enabled2").prop('checked')){
+            enabled = 1;
+        }else{
+            enabled = 0;
+        }
+        alert(enabled);
+{#        alert($("#exchanges").find("option:selected").text())#}
+    });
+
+    $("#close").click(function () {
+        window.location.reload();
+    });
+
+    $("#exchanges").change(function () {
+{#        alert($("#exchanges").find("option:selected").val());#}
+        exchange = $("#exchanges").find("option:selected").val();
+        queue = $("#queue").find("option:selected").val();
+        post_data = {
+            'exchange': exchange,
+            'queue': queue
+        };
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_routing_key_with_eqid' %}",
+            data: post_data,
+            success: function (data) {
+                var rk = data.routing_key;
+                var rk_l = $("#rk");
+                if(rk.length > 0){
+                    $.each(rk, function (i,n) {
+{#                    alert(n.name);#}
+                    rk_l.text(n.name) ;
+                    })
+                }else{
+                    rk_l.text('') ;
+                }
+
+            }
+        })
+
+    });
+
+    $("#queue").change(function () {
+{#        alert($("#exchanges").find("option:selected").val());#}
+        exchange = $("#exchanges").find("option:selected").val();
+        queue = $("#queue").find("option:selected").val();
+        post_data = {
+            'exchange': exchange,
+            'queue': queue
+        };
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_routing_key_with_eqid' %}",
+            data: post_data,
+            success: function (data) {
+                var rk = data.routing_key;
+                var rk_l = $("#rk");
+                if(rk.length > 0){
+                    $.each(rk, function (i,n) {
+{#                    alert(n.name);#}
+                    rk_l.text(n.name) ;
+                    })
+                }else{
+                    rk_l.text('');
+                }
+
+            }
+        })
+
+    });
+
+{#    function get_detail() {#}
+{#        var post_data = {"task_id":1};#}
+{#        $.ajax({#}
+{#            type: "post",#}
+{#            url: "{% url 'test1:detail_p' %}",#}
+{#            data: post_data,#}
+{#            success:function (data) {#}
+{##}
+{#                re = JSON.parse(data);#}
+{#                var str = "";#}
+{#                $("#interval_list").empty();#}
+{#                var ilist = data.detail;#}
+{#                var iid = data.interval_id;#}
+{#                $("#task").val('1111') ;#}
+{#                $("#interval_list").val(iid);#}
+{#                alert(ilist)#}
+{##}
+{#            }#}
+{#        });#}
+{#    }#}
+    /*
+* 获取 tasks 列表
+ */
+    function get_tasks() {
+        $.get("{% url 'test1:get_tasks' %}", function(data){
+            var tl = data.task_list;
+            var ts = $("#tasks");
+            $.each(tl, function (i,n) {
+                ts.append('<option >'+n+'</option>')
+            });
+        })
+    }
+    /*
+* 获取 interval 列表
+ */
+    function get_interval_list() {
+        var post_data = {"interval_id": "1"};
+
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_interval_list_p' %}",
+            data: post_data,
+            success:function (data) {
+{#                var iid = $("#interval_id");#}
+                var str = "";
+{#                $("#interval_list").empty();#}
+                var ilist = data.interval_list;
+                var intervallist = $("#interval_list");
+                $.each(ilist, function (i, n) {
+                    intervallist.append('<option value="'+n.id+'">'+n.period+'</option>')
+                });
+{#                for(var i=0; i<data.interval_list.length; i++){#}
+{#                    if(ilist[i]['id'] == Number(iid)){#}
+{#                        str += '<option value="'+ilist[i]['id']+'" selected="selected">'+ilist[i]['period']+'</option>';#}
+{#                    }else {#}
+{#                        str += '<option value="' + ilist[i]['id'] + '">' + ilist[i]['period'] + '</option>';#}
+{#                    }#}
+{#                    str += '<option value="' + ilist[i]['id'] + '">' + ilist[i]['period'] + '</option>';#}
+{#                }#}
+{#                intervallist.append(str);#}
+{#                $("#interval_list").val(iid);#}
+
+
+            }
+        });
+    }
+
+      /*
+* 获取 exchanges 列表
+ */
+    function get_exchanges_list() {
+        var post_data = {"interval_id": "1"};
+
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_exchanges' %}",
+            data: post_data,
+            success:function (data) {
+                var str = "";
+                var ilist = data.exchanges_list;
+                var exchangesllist = $("#exchanges");
+                $.each(ilist, function (i, n) {
+                    exchangesllist.append('<option value="'+n.id+'">'+n.name+'</option>')
+                });
+            }
+        });
+    }
+
+
+         /*
+* 获取 queues 列表
+ */
+    function get_queues_list() {
+        var post_data = {"interval_id": "1"};
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_queues' %}",
+            data: post_data,
+            success:function (data) {
+                var str = "";
+                var ilist = data.queues_list;
+                var queuesllist = $("#queue");
+                $.each(ilist, function (i, n) {
+                    queuesllist.append('<option value="'+n.id+'">'+n.name+'</option>')
+                });
+            }
+        });
+    }
+
+    $("#update_task").click(function () {
+        var post_data = get_para();
+        if($("#rk").text() == ""){
+            $("#rk").text("不能为空");
+            $("#result_label").text("Routing_key 值不能为空");
+
+        } else{
+
+
+        $.post("{% url 'test1:update_task' %}", post_data, function(data){
+            if(data['status'] == 'true'){
+{#                $("#result_label").html("更新成功");#}
+                $("#result_label").text("更新成功");
+
+                window.location.reload();
+{#                alert('更新成功');#}
+            }else{
+                $("#result_label").text("更新失败");
+{#                $("#result_label").html("更新失败");#}
+            }
+        });
+        }
+    });
+
+    function get_para() {
+        var id = $("#id").html().trim();
+{#        var task = $("#task").val();#}
+        var task = $("#tasks").find("option:selected").text();
+{#        var enabled = 0;#}
+        if($("#enabled1").prop('checked') || $("#enabled2").prop('checked')){
+            enabled = 1;
+        }else{
+            enabled = 0;
+        }
+        var interval_id = $("#interval_list").val();
+        var kwargs = $("#kwargs").val();
+        var queue = $("#queue").find("option:selected").text();
+        var exchange = $("#exchanges").find("option:selected").text();
+        var routing_key = $("#routing_key").val();
+        var rk = $("#rk").text();
+        var para_data = {
+             'id': id,
+             'task': task,
+             'enabled': enabled,
+             'interval_id': interval_id,
+             'kwargs': kwargs,
+             'queue': queue,
+             'exchange': exchange,
+{#             'routing_key': routing_key,#}
+            'routing_key': rk
+
+         };
+         return para_data
+    }
+
+    /*
+* 获取 interval 列表
+ */
+{#    function get_interval_list() {#}
+{#        $.getJSON("{% url 'test1:get_interval_list' %}", function(data){#}
+{#            var ilist = data.interval_list;#}
+{#            var interval_list = $("#interval_list");#}
+{#            $.each(ilist, function (i,n) {#}
+{#                interval_list.append('<option value="'+n.id+'">'+n.period+'</option>')#}
+{#            });#}
+{#        });#}
+{#    }#}
+
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}result{% endblock %}
+
+{% block content %}
+
+<table border="1">
+<thead>
+<tr>
+<td>id</td>
+<td>Task_id</td>
+<td> 第一个加数</td>
+<td>第二个加数</td>
+<td>任务状态</td>
+<td>结果</td>
+<td>开始时间</td>
+<td>完成时间</td>
+</tr>
+</thead>
+
+<tbody>
+{% for res in result %}
+    <tr>
+    <td>{{ res.id }}</td>
+    <td>{{ res.task_id }}</td>
+    <td>{{ res.first}}</td>
+    <td>{{ res.second }}</td>
+    <td>{{ res.status }}</td>
+    <td>{{ res.result }}</td>
+    <td>{{ res.log_date }}</td>
+    <td>{{ res.date_done }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+{% endblock %}

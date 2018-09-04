@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/plugins/bootstrap3-editable/css/bootstrap-editable.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-table/bootstrap-table.min.css">
+
+<link rel="stylesheet" href="/static/plugins/GridManager/css/gm.css">
+{% endblock %}
+
+{% block content %}
+    <section class="content-header">
+    <h1>
+        RabbitMQ
+        <small>Exchanges & Queues</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="{% url 'test1:index' %}"><i class="fa fa-dashboard"></i>主页 </a> </li>
+        <li class="active">Exchanges & Queues</li>
+    </ol>
+    </section>
+<br>
+{#    {% for i in queues %}#}
+{#        {{ i }}#}
+{#    {% endfor %}#}
+{##}
+{#    <button id="sync" type="button">sync</button>#}
+{#    <label id="l1"></label>#}
+
+    <label>Exchanges</label>
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-12">
+        <table grid-manager="exchanges"></table>
+    </div>
+</div>
+    <br>
+    <label>Queues</label>
+<div class="row">
+<div class="col-xs-12 col-sm-6 col-md-12">
+    <table grid-manager="queues"></table>
+</div>
+</div>
+{% endblock %}
+
+{% block script %}
+        <script src="/static/js/csrf.js"></script>
+    <script src='/static/js/jquery-3.3.1.min.js'></script>
+{#<script src="/static/js/jquery-1.10.2.min.js"></script>#}
+<script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/plugins/GridManager/js/gm.js"></script>
+<script src="/static/plugins/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script src="/static/plugins/bootstrap-table/bootstrap-table.js"></script>
+<script src="/static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+<script src="/static/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+
+    <script>
+
+    $(document).ready(function () {
+        get_exchanges();
+        get_queues();
+    });
+
+    function get_exchanges() {
+            var table = document.querySelector('table[grid-manager="exchanges"]');
+table.GM({
+    ajax_data: "{% url 'test1:get_exchanges_table' %}"
+    ,ajax_type: 'POST'
+    ,query: {pluginId: 1}
+    ,supportAjaxPage: true
+    ,sizeData: [8,15,20]
+    ,pageSize: 8
+    ,height: '50%'
+    ,columnData: [
+        {
+            key: 'id',
+            text: 'id'
+        },{
+            key: 'name',
+            text: 'Exchange名称'
+        }
+    ]
+})
+    }
+
+
+        function get_queues() {
+            var table = document.querySelector('table[grid-manager="queues"]');
+table.GM({
+    ajax_url: "{% url 'test1:get_queues_table' %}"
+    ,ajax_type: 'POST'
+    ,query: {pluginId: 1}
+    ,supportAjaxPage: true
+    ,sizeData: [5,10,15,20]
+    ,pageSize: 5
+    ,height: '50%'
+    ,columnData: [
+        {
+            key: 'id',
+            text: 'id'
+        },{
+            key: 'name',
+            text: ' Queue名称'
+        }
+    ]
+})
+    }
+
+    $("#sync").click(function () {
+        $.post("{% url 'test1:rabbitmq_sync' %}",function(data){
+           $("#l1").html(data["ex_num"],' ',data["qu_num"]);
+        });
+    });
+
+
+{#        $('table[grid-manager="test"]').GM({#}
+{#        supportRemind: true#}
+{#        ,i18n:'zh-cn'#}
+{#        ,textConfig:{#}
+{#            'page-go': {#}
+{#                'zh-cn':'跳转',#}
+{#                'en-us':'Go '#}
+{#            }#}
+{#        }#}
+{#        ,disableCache:false#}
+{#        ,disableOrder:false#}
+{#        ,supportSorting: true#}
+{#        ,isCombSorting: true#}
+{#        ,sortDownText: 'up'#}
+{#        ,sortUpText: 'down'#}
+{#        ,supportDrag:true#}
+{#        ,supportAjaxPage:true#}
+{#        ,ajax_url: "{% url 'test1:get_exchanges' %}"#}
+{#        ,ajax_type: 'GET'#}
+{#        ,pageSize:30#}
+{##}
+{#         ,columnData: [{#}
+{#                key: 'id',#}
+{#                remind: 'id',#}
+{#                sorting: 'up',#}
+{#                width: '200px',#}
+{#                text: 'id'#}
+{#            },{#}
+{#                key: 'name',#}
+{#                remind: 'period',#}
+{#                width: '200px',#}
+{#                text: 'Exchange 名称'#}
+{#            },#}
+{#        ]#}
+{#    });#}
+
+
+    </script>
+
+{% endblock %}

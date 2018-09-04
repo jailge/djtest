@@ -1,0 +1,440 @@
+{% extends 'base.html' %}
+
+{% block title %}index{% endblock %}
+
+{% block css %}
+{#    <link rel="stylesheet" href="/static/plugins/dataTables/dataTables.bootstrap.css">#}
+    <link rel="stylesheet" href="/static/plugins/dataTables/jquery.dataTables.css">
+    <link rel="stylesheet" href="/static/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/plugins/GridManager/css/gm.css">
+{% endblock %}
+
+{% block content %}
+
+    <section class="content-header">
+    <h1>
+        任务
+        <small>Task list</small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li><a href="{% url 'test1:dashboard' %}"><i class="fa fa-dashboard"></i>主页 </a> </li>
+        <li class="active">任务列表</li>
+    </ol>
+    </section>
+
+
+    <!-- Main Content -->
+    <section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">任务列表</h3>
+                </div>
+                <!--/.box header -->
+                <div class="box-body">
+
+                    <table id="task_list" class="table-bordered table-striped" width="100%">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>名称</th>
+                            <th>任务</th>
+                            <th>是否启用</th>
+                            <th>最近一次运行</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody_result"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    </section>
+
+
+
+{#    <table id="example" class="display" cellspacing="0" width="100%">#}
+{#    <thead>#}
+{#    <tr>#}
+{#        <th>编号</th>#}
+{#        <th>名称</th>#}
+{#        <th>任务</th>#}
+{#        <th>是否启用</th>#}
+{#        <th>最近一次运行</th>#}
+{#        <th>状态</th>#}
+{#    </tr>#}
+{#    </thead>#}
+{##}
+{#    </table>#}
+{##}
+{##}
+{#<button id="tasks_status" type="button">dianji</button>#}
+{#    <label id="lab" ></label>#}
+{#    <table class="table table-bordered" id="table-result" style="font-size: 15px">#}
+{#    <thead>#}
+{#    <tr>#}
+{#        <th>名称</th>#}
+{#        <th>任务</th>#}
+{#        <th>是否启用</th>#}
+{#        <th>最近一次运行</th>#}
+{#        <th>状态</th>#}
+{#    </tr>#}
+{#    </thead>#}
+{#    <tbody id="tbody_result1"></tbody>#}
+{#    </table>#}
+{##}
+{#    <form method="post">#}
+{#    {% csrf_token %}#}
+{#    {{ form }}#}
+{#    <input type="submit" value="提交">#}
+{#    {{ form.IntervalList }}#}
+{##}
+{#    </form>#}
+
+{#    <form action="{% url 'test1:add_test' %}" method="get">#}
+{#        a: <input type="text" id="a" name="a"><br>#}
+{#        b: <input type="text" id="b" name="b"><br>#}
+{#        <p>result: <span id="result"></span></p>#}
+{#        <button type="button" id="sum">提交</button>#}
+{#    </form>#}
+{##}
+{#<form action='{% url 'test1:add1' %}' method="get" >#}
+{##}
+{#加数1<input name="first" id="first" type="text"><br>#}
+{#加数2<input name="second" id="second" type="text"><br>#}
+{##}
+{#<input type="submit" value="运算">#}
+{##}
+{##}
+{#</form>#}
+{#   <form action='{% url 'test1:add_delay' %}' method="get" >#}
+{#加数1<input name="first_d" id="first_d" type="text"><br>#}
+{#加数2<input name="second_d" id="second_d" type="text"><br>#}
+{##}
+{#<input type="submit" value="运算">#}
+{#</form>#}
+{##}
+{#   <form action='{% url 'test1:add_timeout' %}' method="get" >#}
+{#加数1<input name="first_t" id="first_t" type="text"><br>#}
+{#加数2<input name="second_t" id="second_t" type="text"><br>#}
+{##}
+{#<input type="submit" value="运算">#}
+{#</form>#}
+{##}
+{##}
+{#    <form action='{% url 'test1:db_exec' %}' method="get">#}
+{#    exec<input name="sql" id="sql" type="text"><br>#}
+{#        para<input name="para" id="para" type="text"><br>#}
+{#    <input type="submit" value="执行">#}
+{##}
+{#    </form>#}
+
+{#<form method="post">#}
+{#    {% csrf_token %}#}
+
+{#</form>#}
+
+
+
+{#    <form >#}
+{#    name<input name="task_name" id="task_name" type="text" ><br>#}
+{#    Task<input name="task" id="task" type="text" width="300"><br>#}
+{#    enabled<input name="enabled" id="enabled" type="text"><br>#}
+{#        <input name="enabled" id="enabled" type="checkbox">enabled<br>#}
+{#        <button type="button" id="show_checkbox">显示 enabled</button><br>#}
+{##}
+{#    Interval_id<input name="interval_id" id="interval_id" type="text"><br>#}
+{#        <select id="interval_list">#}
+{#    <option value="0">选择</option>#}
+{##}
+{#    </select>#}
+{#    <button id="display" type="button">显示</button><br>#}
+{#    Arguments<input name="arguments" id="arguments" type="text" width="700px"><br>#}
+{#        Arguments<textarea name="arguments" id="arguments"></textarea><br>#}
+{#    Queue<input name="queue" id="queue" type="text"><br>#}
+{#    Exchange<input name="exchange" id="exchange" type="text"><br>#}
+{#    Routing Key<input name="routing_key" id="routing_key" type="text"><br>#}
+{##}
+{#        <button type="button" id="save_task">保存任务</button>#}
+{#    </form>#}
+{##}
+{#    <label>{{ task_status }}</label><br>#}
+{##}
+{##}
+{#    <form action="{% url 'test1:add_interval' %}" method="get">#}
+{#    every<input name="every" id="every" type="text" ><br>#}
+{#    period<input name="period" id="period" type="text" width="300"><br>#}
+{#    <input type="submit" value="增加定时">#}
+{#    </form>#}
+{##}
+{#    <label>{{ interval_status }}</label><br>#}
+{% endblock %}
+
+{% block script %}
+{#    <script src='/static/plugins/dataTables/jquery.dataTables.min.js'></script>#}
+{#    <script src='/static/plugins/dataTables/dataTables.bootstrap.min.js'></script>#}
+    <script src='/static/js/jquery-3.3.1.min.js'></script>
+    <script src="/static/js/csrf.js"></script>
+    <script src="/static/plugins/GridManager/js/gm.js"></script>
+    <script src="/static/plugins/dataTables/jquery.dataTables.js"></script>
+
+    <script>
+{#    $.ajaxSetup({#}
+{#        data: {csrfmiddlewaretoken: '{{ csrf_token }}' },#}
+{#    });#}
+    $(document).ready(function () {
+        $("#sum").click(function () {
+            var a = $("#a").val();
+            var b = $("#b").val();
+
+            $.get("{% url 'test1:add_test' %}", {'a':a, 'b':b}, function(ret){
+                $("#result").html(ret)
+            })
+        });
+
+
+        get_interval_list();
+        get_tasks_status();
+        window.setInterval(get_tasks_status, 5000);
+
+        $("#task_list").DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+            "pagingType":"full_numbers",
+            "pageLength":10
+        });
+
+
+
+{#        $("#example").DataTable({#}
+{#           "ajax":  "{% url 'test1:get_tasks_status' %}",#}
+{#            "columns": [#}
+{#                {"data": "id"},#}
+{#                {"data": "name"},#}
+{#                {"data": "task"},#}
+{#                {"data": "enabled"},#}
+{#                {"data": "last_run_at"},#}
+{#                {"data": "state"}#}
+{#            ]#}
+{#        });#}
+
+    });
+
+
+
+
+
+
+
+    $("#tasks_status").click(function () {
+        var post_data = {"status":'databtn'};
+        $.post("{% url 'test1:get_tasks_status' %}", post_data, function(data){
+            alert(data['tasks_status'][1]['name'])
+        });
+    });
+
+    function get_tasks_status() {
+        var post_data = {"status":'data'};
+        var tbody = $("#tbody_result");
+        $.ajax({
+            type: "post",
+            url: "{% url 'test1:get_tasks_status' %}",
+            data: post_data,
+            success:function (data) {
+                var str = "";
+                $("#lab").html(data.tasks_status[2]['name'])
+                for(var i=0;i<data.tasks_status.length;i++){
+                    var task_id = data.tasks_status[i]['id'];
+
+                    str += "<tr>"+
+                            "<td>"+data.tasks_status[i]['id']+"</td>"+
+                            "<td><a href='/detail/"+task_id+"'>"+data.tasks_status[i]['name']+"</a></td>"+
+                            "<td>"+data.tasks_status[i]['task']+"</td>";
+                    if (data.tasks_status[i]['enabled'] == 1){
+                        str += "<td>"+"启用"+"</td>";
+                    }else{
+                        str += "<td>"+"未启用"+"</td>";
+                    }
+                    str += "<td>"+data.tasks_status[i]['last_run_at']+"</td>";
+                    if (data.tasks_status[i]['state'] == 'SUCCESS'){
+                        str += "<td>"+"成功"+"</td></tr>";
+                    } else if(data.tasks_status[i]['state'] == 'STARTED'){
+                        str += "<td>"+"开始"+"</td></tr>";
+                    } else if(data.tasks_status[i]['enabled'] == 0){
+                        str += "<td>"+"未执行过"+"</td></tr>";
+                    }else if(data.tasks_status[i]['state'] == 'FAILURE'){
+                        str += "<td>"+"失败"+"</td></tr>";
+                    }else if(data.tasks_status[i]['state'] == 'RECEIVED'){
+                        str += "<td>"+"已接收"+"</td></tr>";
+                    }
+
+
+
+                }
+                tbody.html(str);
+            }
+
+        });
+    }
+
+
+/*
+* 获取 interval 列表
+ */
+    function get_interval_list() {
+        $.getJSON("{% url 'test1:get_interval_list' %}", function(data){
+            var ilist = data.interval_list;
+            var interval_list = $("#interval_list");
+            $.each(ilist, function (i,n) {
+                interval_list.append('<option value="'+n.id+'">'+n.period+'</option>')
+            });
+        });
+    }
+
+
+    $("#display").click(function () {
+        var post_data = get_para();
+        $.post("{% url 'test1:display_new_tasks' %}", post_data, function(data){
+            alert("task_name:"+data['task_name']+"===task:"+data['task']+
+                "===id:"+data['interval_id']+'===enabled:'+data['enabled']+
+                    "===arguments:"+data['kwargs']+"===Queue:"+data['queue']
+            )
+        });
+{#        a = $("#interval_list").val();#}
+{#        alert(a);#}
+    });
+
+    $("#save_task").click(function () {
+        var post_data = get_para();
+        $.post("{% url 'test1:add_task' %}", post_data, function(data){
+            alert(data['status'])
+        });
+    });
+
+    function get_para() {
+        var task_name = $("#task_name").val();
+        var task = $("#task").val();
+        var enabled = 0;
+        if($("#enabled").prop('checked')){
+            enabled = 1;
+        }else{
+            enabled = 0;
+        }
+        var interval_id = $("#interval_list").val();
+        var kwargs = $("#arguments").val();
+        var queue = $("#queue").val();
+        var exchange = $("#exchange").val();
+        var routing_key = $("#routing_key").val();
+         var para_data = {
+             'task_name': task_name,
+             'task': task,
+             'enabled': enabled,
+             'interval_id': interval_id,
+             'kwargs': kwargs,
+             'queue': queue,
+             'exchange': exchange,
+             'routing_key': routing_key
+         };
+         return para_data
+    }
+
+
+    $("#show_checkbox").click(function () {
+        if($("#enabled").prop('checked')){
+            var is_checked = 1;
+            alert($("#enabled").prop("checked"));
+        }else{
+            alert('0');
+        }
+    });
+
+{#    function get_interval_list() {#}
+{#        var url = '{% url 'test1:get_interval_list' %}';#}
+{#        var para = {};#}
+{#        $.post(url, function (jdata) {#}
+{#            var data = $.parseJSON(jdata);#}
+{#            var ilist = data.interval_list;#}
+{#            var interval_list = $("#interval_list");#}
+{#            $.each(ilist, function (i,n) {#}
+{#                interval_list.append('<option value="'+n.id+'">'+n.period+'</option>')#}
+{#            });#}
+{#        })#}
+{#    }#}
+
+{#    $("#display").click(function(){#}
+{#        var post_data = {#}
+{#          'id': $("#interval_list").val(),#}
+{#        };#}
+{#        $.ajax({#}
+{#            url: {% url 'test1:display_selected_interval' %},#}
+{#            type: "POST",#}
+{#            data: post_data,#}
+{#            success: function (data) {#}
+{#                data = JSON.parse(data);#}
+{#                alert(data["id"]);#}
+{#            }#}
+{#        });#}
+{#    });#}
+
+
+    </script>
+
+{#    <script>#}
+{#    $("#display").click(function(){#}
+{#        var post_data = {#}
+{#          'id': $("#interval_list").val(),#}
+{#        };#}
+{#        $.ajax({#}
+{#            url: {% url 'test1:display_selected_interval' %},#}
+{#            type: "POST",#}
+{#            data: post_data,#}
+{#            success: function (data) {#}
+{#                data = JSON.parse(data);#}
+{#                if (data["status"] == 1){#}
+{##}
+{#                }else{#}
+{#                    alert(data["id"]);#}
+{#                }#}
+{#            }#}
+{#        });#}
+{#    });#}
+{#    </script>#}
+
+
+{#    <script>#}
+{#    $(function () {#}
+{#        $.get("{% url 'test1:get_interval_list' %}", function(data){#}
+{#            var ilist = data.interval_list;#}
+{#            var interval_list = $("#interval_list");#}
+{#            $.each(ilist, function (i,n) {#}
+{#                interval_list.append('<option value="'+n.id+'">'+n.period+'</option>')#}
+{#            });#}
+{#        });#}
+{#    });#}
+{#    </script>#}
+
+{#    <script>#}
+{#    $(function () {#}
+{#        $("#display").click(function(){#}
+{#            a = $("#interval_list").val();#}
+{#            alert(a);#}
+{#        });#}
+{##}
+{#    })#}
+{#    </script>#}
+
+
+{% endblock %}
